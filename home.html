@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Passenger Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+
+    header {
+      background: #8e0e00;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+    }
+
+    .user-info {
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 30px;
+    }
+
+    h2 {
+      color: #8e0e00;
+    }
+
+    .section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #8e0e00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #a31515;
+    }
+
+    select {
+      margin-top: 10px;
+      padding: 8px;
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="qatar.jpg" alt="Qatar Airways Logo" class="logo" />
+    <div class="user-info">Logged in as: QR56789</div>
+  </header>
+
+  <div class="container">
+    <h2>Welcome, Aiswarya KS</h2>
+
+    <div class="section">
+      <h3>Upcoming Flights</h3>
+      <table>
+        <thead>
+          <tr><th>Flight</th><th>From</th><th>To</th><th>Date</th><th>Cabin</th><th>Check-in</th></tr>
+        </thead>
+        <tbody id="flightTableBody"></tbody>
+      </table>
+
+      <label for="flightSelector">Select a flight to track baggage:</label>
+      <select id="flightSelector">
+        <option value="">-- Select Flight --</option>
+      </select>
+      <button class="btn" onclick="goToTracker()">Go to Baggage Tracker</button>
+    </div>
+
+    <div class="section">
+      <h3>Baggage History</h3>
+      <table>
+        <tr><th>Flight</th><th>Date</th><th>Cabin</th><th>Check-in</th><th>Status</th></tr>
+        <tr><td>QR101</td><td>2025-09-01</td><td>7kg</td><td>38kg</td><td>Approved</td></tr>
+        <tr><td>QR102</td><td>2025-08-10</td><td>9kg</td><td>42kg</td><td>Overweight</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    async function loadFlights() {
+      const response = await fetch('flights.json');
+      const flights = await response.json();
+
+      const tableBody = document.getElementById('flightTableBody');
+      const selector = document.getElementById('flightSelector');
+
+      flights.forEach(flight => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${flight.flightNumber}</td>
+          <td>${flight.from}</td>
+          <td>${flight.to}</td>
+          <td>${flight.date}</td>
+          <td>${flight.cabinLimit}kg</td>
+          <td>${flight.checkinLimit}kg</td>
+        `;
+        tableBody.appendChild(row);
+        const option = document.createElement('option');
+        option.value = JSON.stringify(flight);
+option.textContent = flight.flightNumber;
+        selector.appendChild(option);
+      });
+    }
+
+    function goToTracker() {
+      const selected = document.getElementById("flightSelector").value;
+      if (!selected) {
+        alert("Please select a flight.");
+        return;
+      }
+      localStorage.setItem("selectedFlight", selected);
+      window.location.href = "index.html";
+    }
+
+    window.onload = loadFlights;
+  </script>
+</body>
+</html>

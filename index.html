@@ -1,59 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta charset="UTF-8" />
   <title>Luggage Weight Checker</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(to right, #8e0e00, #1f1c18);
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 14px;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      width: 280px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #8e0e00;
+    }
+
+    label {
+      display: block;
+      margin-top: 8px;
+      font-weight: 500;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    input, select {
+      margin-top: 4px;
+      padding: 6px;
+      width: 100%;
+      font-size: 13px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 8px 16px;
+      font-size: 13px;
+      border: none;
+      border-radius: 5px;
+      background-color: #8e0e00;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #a31515;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #removeSection {
+      margin-top: 15px;
+    }
+
+    .remove-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .remove-item {
+      width: 100%;
+      text-align: left;
+    }
+
+    .remove-item label,
+    .remove-item input {
+      width: 100%;
+    }
+
+    .remove {
+      margin-top: 10px;
+    }
+  </style>
 </head>
-<style>
-  body {
-    background: url('download.jpg') no-repeat center center fixed;
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  .container {
-    background: rgb(255, 255, 255);
-    padding: 20px;
-    max-width: 300px;
-    border-radius: 90px;
-    text-align: center;
-  }
-  input {
-    margin: 8px;
-    padding: 5px;
-    width: 150px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  .logo {
-    width: 120px;
-    margin-bottom: 1px;
-  }
-  button {
-    margin-top: 10px;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 5px;
-    background: #0073e6;
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-  }
-</style>
 <body>
   <div class="container">
     <img src="qatar.jpg" alt="Qatar Airways Logo" class="logo" />
     <h2>Qatar Airways Baggage Tracker</h2>
-    <label>Enter Cabin Weight(kg): </label>
+
+    <label for="flightDropdown">Selected Flight:</label>
+    <select id="flightDropdown" disabled></select>
+
+    <label for="weightCabin">Enter Cabin Weight (kg):</label>
     <input type="number" id="weightCabin" />
-    <br />
-    <label>Enter Check In Weight(kg): </label>
+
+    <label for="weightCheckin">Enter Check-in Weight (kg):</label>
     <input type="number" id="weightCheckin" />
-    <br />
-    <button onclick="checkweight()">Check</button>
+
+    <button onclick="checkweight()">Check In</button>
+
+    <div id="removeSection" class="hidden">
+      <div class="remove-group">
+        <div class="remove-item">
+          <label id="remlCabin" class="hidden">Remove Cabin (kg):</label>
+          <input type="number" id="removedCabin" class="hidden" />
+        </div>
+        <div class="remove-item">
+          <label id="remlCheckin" class="hidden">Remove Check-in (kg):</label>
+          <input type="number" id="removedCheckin" class="hidden" />
+        </div>
+      </div>
+      <button onclick="removeWeight()" id="remB" class="hidden remove">Remove</button>
+    </div>
   </div>
+
+  <script>
+    window.onload = function () {
+      const flightData = JSON.parse(localStorage.getItem("selectedFlight"));
+      const dropdown = document.getElementById("flightDropdown");
+
+      if (flightData) {
+        const option = document.createElement("option");
+        option.value = flightData.flightNumber;
+        option.textContent = `${flightData.flightNumber} - ${flightData.from} to ${flightData.to}`;
+        option.selected = true;
+        dropdown.appendChild(option);
+
+        dropdown.dataset.cabinLimit = flightData.cabinLimit;
+        dropdown.dataset.checkinLimit = flightData.checkinLimit;
+      }
+    };
+  </script>
   <script src="ex1.js"></script>
 </body>
 </html>

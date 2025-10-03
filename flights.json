@@ -1,0 +1,18 @@
+[
+  {
+    "flightNumber": "QR123",
+    "from": "Doha",
+    "to": "Dublin",
+    "date": "2025-10-15",
+    "cabinLimit": 8,
+    "checkinLimit": 40
+  },
+  {
+    "flightNumber": "QR456",
+    "from": "Doha",
+    "to": "Cork",
+    "date": "2025-11-02",
+    "cabinLimit": 8,
+    "checkinLimit": 40
+  }
+]
